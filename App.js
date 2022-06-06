@@ -1,42 +1,36 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, FlatList} from 'react-native';
+import Header from './components/Header';
+import TodoItem from './components/TodoItem';
 
 export default function App() {
-  const [people, setPeople] = useState([
-    { name: 'john', id: '1' },
-    { name: 'james', id: '2' },
-    { name: 'jason', id: '3' },
-    { name: 'jack', id: '4' },
-    { name: 'jean', id: '5' },
-    { name: 'jordan', id: '6' },
-    { name: 'justin', id: '7' },
-    { name: 'jeremy', id: '8' },
-    { name: 'jake', id: '9' },
-    { name: 'joel', id: '10' },
-  ])
+  const [todos, setTodos] = useState([
+    { text: 'buy coffee', key: '1' },
+    { text: 'create an app', key: '2' },
+    { text: 'play on the switch', key: '3' }
+  ]);
 
-  const pressHandler = (id) => {
-    console.log(id)
-    setPeople((prevPeople) => {
-      return prevPeople.filter(person => person.id != id)
+  const pressHandler = (key) => {
+    setTodos((prevTodos) => {
+      return prevTodos.filter(todo => todo.key != key)
     })
   }
 
   return (
     <View style={styles.container}>
+      <Header />
+      <View style={styles.content}>
 
-      <FlatList 
-        horizontal={false}
-        numColumns={2}
-        keyExtractor={(item) => item.id}
-        data={people}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => pressHandler(item.id)}>
-            <Text style={styles.item}>{item.name}</Text>
-          </TouchableOpacity>
-        )}/>
-
+        <View style={styles.list}>
+          <FlatList 
+            data={todos}
+            renderItem={({ item }) => (
+              <TodoItem item={item} pressHandler={pressHandler}/>
+            )}
+          />
+        </View>
+      </View>
       <StatusBar style="auto" />
     </View>
   );
@@ -46,18 +40,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 40,
-    paddingLeft: 20,
-    paddingRight: 20,
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
-  item: {
-    marginTop: 24,
-    padding: 30,
-    backgroundColor: 'pink',
-    fontSize: 24,
-    marginHorizontal: 10,
-    marginTop: 24
+  content: {
+    padding: 40
+  },
+  list: {
+    marginTop: 20
   }
 });
